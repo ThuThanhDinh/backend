@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import mysql from 'mysql2/promise';
 import bluebird from 'bluebird';
 import db from '../models/index';
+import { where } from 'sequelize/lib/sequelize';
 const salt = bcrypt.genSaltSync(10);
 // create the connection, specify bluebird as Promise
 
@@ -40,6 +41,7 @@ const getUserList = async () => {
 
     let users = [];
     users = await db.User.findAll();
+    console.log("cheeck users", users)
     return users;
     // return connection.query(
     //     'SELECT * from user ',
@@ -82,6 +84,36 @@ const getUserById = async (id) => {
     return user.get({ plain: true });
 
 }
+
+const updateUserInfor = async (email, username, id) => {
+    await db.User.Update(
+        {
+            email: email, username: username
+        }, {
+        where: {
+            id: id
+        }
+    }
+    );
+}
+
+const createNewProfileUser = async (fullName, dateOfBirth, gender, idCardVisaNo, bloodGroup, mobile, city) => {
+
+    try {
+        await db.Profile_User.create({
+            fullName: fullName,
+            dateOfBirth: dateOfBirth,
+            gender: gender,
+            bloodGroup: bloodGroup,
+            mobile: mobile,
+            city: city
+        })
+    } catch (error) {
+        console.log("check error", error)
+    }
+}
+
+
 module.exports = {
-    hashUserPassword, createNewUser, getUserList, deleteUser, getUserById
+    hashUserPassword, createNewUser, getUserList, deleteUser, getUserById, updateUserInfor, createNewProfileUser
 }

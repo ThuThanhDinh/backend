@@ -4,13 +4,17 @@ import initWebRoutes from "./routes/web";
 require("dotenv").config();
 import bodyParser from "body-parser";
 import connection from "./config/connectDB";
-
+import cors from 'cors';
 
 
 
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+//
+app.use(cors());
+
 //config view engine
 configViewEngine(app);
 //config body-parser
