@@ -1,4 +1,7 @@
 'use strict';
+
+const group = require("../models/group");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('User', {
@@ -16,6 +19,12 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING
+      },
+      groupId: {
+        type: Sequelize.INTEGER
+      },
+      hospitalId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

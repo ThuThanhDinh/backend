@@ -13,22 +13,22 @@ const handleHelloWorld = (req, res) => {
     return res.render("home.ejs");
 }
 
-// const handleUser = async (req, res) => {
-//     let usersList = await userService.getUserList()
-//     console.log("check usersList", usersList)
-//     return res.render("user.ejs", usersList);
-// }
-
 const handleUser = async (req, res) => {
-    try {
-        const usersList = await userService.getUserList();
-        console.log("check usersList", usersList);
-        res.send(usersList); // Trả về danh sách người dùng dưới dạng JSON
-    } catch (error) {
-        console.error("Error retrieving user list:", error);
-        res.status(500).send("Internal Server Error");
-    }
+    let usersList = await userService.getUserList()
+    console.log("check usersList", usersList)
+    return res.render("user.ejs", usersList);
 }
+
+// const handleUser = async (req, res) => {
+//     try {
+//         const usersList = await userService.getUserList();
+//         console.log("check usersList", usersList);
+//         res.send(usersList); // Trả về danh sách người dùng dưới dạng JSON
+//     } catch (error) {
+//         console.error("Error retrieving user list:", error);
+//         res.status(500).send("Internal Server Error");
+//     }
+// }
 
 const handleCreateNewUser = (req, res) => {
     let email = req.body.email
@@ -37,7 +37,7 @@ const handleCreateNewUser = (req, res) => {
     userService.createNewUser(email, password, username)
     //userService.getUserList()
 
-    return res.redirect("/user");
+    // return res.redirect("/user");
 }
 
 
