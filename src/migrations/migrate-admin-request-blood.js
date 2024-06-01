@@ -9,8 +9,9 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
 
-
-
+            userId: {
+                type: Sequelize.INTEGER
+            },
             fullname: {
                 type: Sequelize.STRING
             },
@@ -24,9 +25,7 @@ module.exports = {
                 type: Sequelize.STRING
             },
 
-            date: {
-                type: Sequelize.STRING
-            },
+
             typeOfBlood: {
                 type: Sequelize.STRING
             },

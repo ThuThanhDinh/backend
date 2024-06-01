@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 
     //ORM
     Donor_Infor.init({
+        userId: DataTypes.INTEGER,
         fullname: DataTypes.STRING,
         mobile: DataTypes.STRING,
         email: DataTypes.STRING,

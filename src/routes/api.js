@@ -27,6 +27,8 @@ const initApiRoutes = (app) => {
     router.post("/create-book-donation", apiController.handleBookDonation)
     router.get("/get-all-donation-schedule", apiController.handleAllDonationScheduleByHospitalId)
     router.get("/get-all-donor-by-hospitalId", apiController.handleAllDonorByHospitalId)
+    router.get("/get-notification-by-donorid", apiController.handleNotificationByDonorId)
+    router.get("/get-all-history-by-donorId", apiController.handleAllHistoryByDonorId)
     router.post("/create-donor-infor", apiController.handleCreateDonorInfor)
     router.get("/admin/get-donor-infor", apiController.handleAllDonorInfor)
     router.delete("/delete-request", apiController.handleDeleteRequest)

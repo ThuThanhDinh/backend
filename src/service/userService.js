@@ -40,7 +40,7 @@ const createNewUser = async (userData) => {
         let hashPass = hashUserPassword(userData.password);
         await db.User.create({
             email: userData.email,
-            name: userData.name,
+            usesname: userData.name,
             password: hashPass,
             groupId: 2
         })
@@ -149,7 +149,8 @@ const LoginUser = async (userData) => {
                 DT: {
                     access_token: token,
                     id: user.id,
-                    hospitalId: user.hospitalId
+                    hospitalId: user.hospitalId,
+
                 }
             }
         } else {
@@ -239,39 +240,109 @@ const getAllDonationScheduleByHospitalId = async (hospitalId) => {
 
 const getAllDonorByHospitalId = async (hospitalId) => {
     try {
-
+        // Truy vấn cơ sở dữ liệu để lấy tất cả các donor liên quan đến hospitalId
         let data = await db.Donor_Infor.findAll({
             where: { hospitalId: hospitalId }
-        }
-        )
-        //console.log(data);
+        });
+
+        // Tạo một Map để lưu trữ các donor duy nhất dựa trên userId
+        const uniqueDonorsMap = new Map();
+
+        // Lặp qua tất cả các bản ghi được truy vấn
+        data.forEach((entry) => {
+            if (!uniqueDonorsMap.has(entry.userId)) {
+                uniqueDonorsMap.set(entry.userId, {
+                    fullname: entry.fullname,
+                    gender: entry.gender,
+                    mobile: entry.mobile,
+                    city: entry.city,
+                    email: entry.email,
+                    typeOfBlood: entry.typeOfBlood,
+
+                });
+            }
+        });
+
+        // Chuyển đổi Map thành mảng
+        const uniqueDonors = Array.from(uniqueDonorsMap.values());
+
         return {
             EM: '',
             EC: 0,
-            DT: data
-
-        }
+            DT: uniqueDonors
+        };
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return {
             EM: 'Something went wrong in the service',
             EC: -2,
             DT: []
-        }
+        };
     }
-}
+};
+
+const getNotificationByDonorId = async (userId) => {
+    try {
+        // Truy vấn cơ sở dữ liệu để lấy tất cả các donor liên quan đến hospitalId
+        let data = await db.Admin_Request_Blood.findAll({
+            where: { userId: userId }
+        });
+
+
+
+        return {
+            EM: '',
+            EC: 0,
+            DT: data
+        };
+
+    } catch (err) {
+        console.log(err);
+        return {
+            EM: 'Something went wrong in the service',
+            EC: -2,
+            DT: []
+        };
+    }
+};
+
+const getAllHistoryByDonorId = async (userId) => {
+    try {
+        // Truy vấn cơ sở dữ liệu để lấy tất cả các donor liên quan đến hospitalId
+        let data = await db.Donor_Infor.findAll({
+            where: { userId: userId }
+        });
+
+
+
+        return {
+            EM: '',
+            EC: 0,
+            DT: data
+        };
+
+    } catch (err) {
+        console.log(err);
+        return {
+            EM: 'Something went wrong in the service',
+            EC: -2,
+            DT: []
+        };
+    }
+};
 
 const createDonorInfor = async (requestData) => {
     //console.log("check", requestData)
     try {
 
         await db.Donor_Infor.create({
+            userId: requestData.userId,
             fullname: requestData.fullname,
             mobile: requestData.mobile,
             email: requestData.email,
-            city: requestData.city,
             hospitalId: requestData.hospitalId,
+            city: requestData.city,
             date: requestData.date,
             typeOfBlood: requestData.typeOfBlood,
             gender: requestData.gender,
@@ -301,15 +372,15 @@ const createDonorInfor = async (requestData) => {
 }
 
 const createRequestBloodFromAdmin = async (requestData) => {
-    //console.log("check", requestData)
+    console.log("check", requestData)
     try {
 
         await db.Admin_Request_Blood.create({
+            userId: requestData.userId,
             fullname: requestData.fullname,
             mobile: requestData.mobile,
             email: requestData.email,
             city: requestData.city,
-            date: requestData.date,
             typeOfBlood: requestData.typeOfBlood,
             gender: requestData.gender,
             messageFromAdmin: requestData.message
@@ -485,30 +556,53 @@ const createNewProfileUser = async (fullName, dateOfBirth, gender, idCardVisaNo,
 }
 
 
-const getAllDonorInfor = async (userData) => {
+const getAllDonorInfor = async () => {
     try {
+        // Truy vấn cơ sở dữ liệu để lấy tất cả các donor
+        let data = await db.Donor_Infor.findAll();
 
-        let data = await db.Donor_Infor.findAll()
+        // Tạo một Map để lưu trữ các donor duy nhất dựa trên userId
+        const uniqueDonorsMap = new Map();
+
+        // Lặp qua tất cả các bản ghi được truy vấn
+        data.forEach((entry) => {
+            if (!uniqueDonorsMap.has(entry.userId)) {
+                uniqueDonorsMap.set(entry.userId, {
+                    userId: entry.userId,
+                    fullname: entry.fullname,
+                    gender: entry.gender,
+                    mobile: entry.mobile,
+                    city: entry.city,
+                    email: entry.email,
+                    typeOfBlood: entry.typeOfBlood,
+                });
+            }
+        });
+
+        // Chuyển đổi Map thành mảng
+        const uniqueDonors = Array.from(uniqueDonorsMap.values());
+
         return {
             EM: '',
             EC: 0,
-            DT: data
-        }
+            DT: uniqueDonors
+        };
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return {
             EM: 'Something went wrong in the service',
             EC: -2,
             DT: []
-        }
+        };
     }
-}
+};
 
 
 module.exports = {
     hashUserPassword, createNewUser, getUserList, deleteUser, getUserById,
     updateUserInfor, createNewProfileUser, LoginUser, SendBloodRequest, getAllRequest,
     getAllBloodBank, BookDonation, getAllDonationScheduleByHospitalId, createDonorInfor,
-    getAllDonorInfor, getAllDonorByHospitalId, deleteRequest, createRequestBloodFromAdmin
+    getAllDonorInfor, getAllDonorByHospitalId, deleteRequest, createRequestBloodFromAdmin,
+    getNotificationByDonorId, getAllHistoryByDonorId
 }

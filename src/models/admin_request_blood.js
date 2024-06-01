@@ -2,6 +2,8 @@
 const {
     Model
 } = require('sequelize');
+const hospital = require('./hospital');
+const user = require('./user');
 module.exports = (sequelize, DataTypes) => {
     class Admin_Request_Blood extends Model {
         /**
@@ -18,14 +20,15 @@ module.exports = (sequelize, DataTypes) => {
 
     //ORM
     Admin_Request_Blood.init({
+        userId: DataTypes.INTEGER,
         fullname: DataTypes.STRING,
         mobile: DataTypes.STRING,
         email: DataTypes.STRING,
         city: DataTypes.STRING,
-        date: DataTypes.STRING,
         typeOfBlood: DataTypes.STRING,
         gender: DataTypes.STRING,
         messageFromAdmin: DataTypes.STRING,
+
     }, {
         sequelize,
         modelName: 'Admin_Request_Blood',

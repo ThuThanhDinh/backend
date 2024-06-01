@@ -10,7 +10,9 @@ module.exports = {
             },
 
 
-
+            userId: {
+                type: Sequelize.INTEGER
+            },
             fullname: {
                 type: Sequelize.STRING
             },

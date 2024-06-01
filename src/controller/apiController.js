@@ -237,13 +237,71 @@ const handleAllDonorByHospitalId = async (req, res) => {
         })
     }
 }
+const handleNotificationByDonorId = async (req, res) => {
+    try {
 
+        const userId = req.query.userId;
+        console.log("check hosss", userId)
+        if (!userId) {
+            return res.status(400).json({
+                EC: 1,
+                EM: 'user ID is required',
+                DT: [],
+            });
+        }
+        let data = await userService.getNotificationByDonorId(userId)
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT,
+        })
+
+    } catch (e) {
+        console.log('Error in API controller:', e);
+        return res.status(500).json({
+            EM: 'error from server',
+            EC: '-1',
+            DT: "",
+        })
+    }
+}
+
+const handleAllHistoryByDonorId = async (req, res) => {
+    try {
+
+        const userId = req.query.userId;
+        console.log("check hiisss", userId)
+        if (!userId) {
+            return res.status(400).json({
+                EC: 1,
+                EM: 'user ID is required',
+                DT: [],
+            });
+        }
+        let data = await userService.getAllHistoryByDonorId(userId)
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT,
+        })
+
+    } catch (e) {
+        console.log('Error in API controller:', e);
+        return res.status(500).json({
+            EM: 'error from server',
+            EC: '-1',
+            DT: "",
+        })
+    }
+}
 
 const handleCreateDonorInfor = async (req, res) => {
     //console.log(req.body)
     try {
 
-        if (!req.body.fullname || !req.body.mobile || !req.body.email || !req.body.city || !req.body.hospitalId ||
+        if (!req.body.userId || !req.body.fullname || !req.body.mobile || !req.body.email || !req.body.city || !req.body.hospitalId ||
             !req.body.date || !req.body.typeOfBlood || !req.body.gender
 
         ) {
@@ -325,8 +383,8 @@ const handleRequestBloodFromAdmin = async (req, res) => {
     //console.log(req.body)
     try {
 
-        if (!req.body.fullname || !req.body.mobile || !req.body.email || !req.body.city ||
-            !req.body.date || !req.body.typeOfBlood || !req.body.gender || !req.body.message
+        if (!req.body.userId || !req.body.fullname || !req.body.mobile || !req.body.email || !req.body.city ||
+            !req.body.typeOfBlood || !req.body.gender || !req.body.message
 
         ) {
             return res.status(200).json({
@@ -360,6 +418,7 @@ const handleRequestBloodFromAdmin = async (req, res) => {
 module.exports = {
     testApi, handleCreateNewUser, handleLogin, handleSendBoodRequest, handleAllRequest, handleAllBloodBank,
     handleBookDonation, handleAllDonationScheduleByHospitalId, handleCreateDonorInfor, handleAllDonorInfor,
-    handleAllDonorByHospitalId, handleDeleteRequest, handleRequestBloodFromAdmin
+    handleAllDonorByHospitalId, handleDeleteRequest, handleRequestBloodFromAdmin, handleNotificationByDonorId,
+    handleAllHistoryByDonorId
 
 }
